@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 	description:
 		"A project work built for the submission and management of project works for the departmet of Computer and Robotics Education, University of Nigeria, Nsukka",
 	icons: {
-		icon: "",
+		icon: "/assets/images/site-logo.svg",
 	},
 };
 
