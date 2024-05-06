@@ -7,6 +7,8 @@ import { CreateUserParams } from "./shared.types";
 export async function createUser(userData: CreateUserParams) {
 	try {
 		connetToDatabase();
+		// creating new users
+
 		const newUser = await User.create(userData);
 
 		return newUser;
