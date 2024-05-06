@@ -26,7 +26,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
-import { useRouter, usePathname } from "next/navigation";
+// import { useRouter, usePathname } from "next/navigation";
 import { ProjectsSchema } from "@/lib/validations";
 import { useTheme } from "@/context/ThemeProvider";
 import Image from "next/image";
@@ -35,7 +35,7 @@ const Project = () => {
 	const editorRef = useRef(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	let type = "";
+	let type = "Submit";
 
 	const form = useForm<z.infer<typeof ProjectsSchema>>({
 		resolver: zodResolver(ProjectsSchema),
@@ -47,7 +47,9 @@ const Project = () => {
 		},
 	});
 
-	async function onSubmit(values: z.infer<typeof ProjectsSchema>) {}
+	async function onSubmit(values: z.infer<typeof ProjectsSchema>) {
+		setIsSubmitting(false);
+	}
 
 	const handleInputKeyDown = (
 		e: React.KeyboardEvent<HTMLInputElement>,

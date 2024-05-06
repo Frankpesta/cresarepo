@@ -3,8 +3,8 @@
 import React from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
+// import { usePathname, useSearchParams, useRouter } from "next/navigation";
+// import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
 interface CustomInputProps {
 	route: string;
@@ -21,9 +21,9 @@ const LocalSearchBar = ({
 	placeholder,
 	otherClasses,
 }: CustomInputProps) => {
-	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
+	// const router = useRouter();
+	// const pathname = usePathname();
+	// const searchParams = useSearchParams();
 	return (
 		<div className="relative w-full max-w-[600px]">
 			<div
