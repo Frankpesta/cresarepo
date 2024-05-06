@@ -1,10 +1,10 @@
 "use client";
 import { HomePageFilters } from "@/constants/filters";
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "../ui/button";
 
 const HomeFilters = () => {
-	let active = "";
+	let active = "oldest";
 	return (
 		<div className="mt-10 hidden flex-wrap gap-3 md:flex">
 			{HomePageFilters.map((item) => (

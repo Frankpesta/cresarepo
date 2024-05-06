@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+// import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
 	type: string;
@@ -10,8 +10,8 @@ interface Props {
 }
 
 const EditDeleteAction = ({ itemId, type }: Props) => {
-	const pathname = usePathname();
-	const router = useRouter();
+	// const pathname = usePathname();
+	// const router = useRouter();
 	return (
 		<div className="flex items-center justify-end gap-3 max-sm:w-full">
 			{type === "Project" && (
