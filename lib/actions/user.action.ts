@@ -17,3 +17,18 @@ export async function createUser(userData: CreateUserParams) {
 		throw error;
 	}
 }
+
+export async function getUserById(params: any) {
+	try {
+		connetToDatabase();
+
+		const { userId } = params;
+		const user = await User.findOne({
+			clerkId: userId,
+		});
+		return user;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+}
