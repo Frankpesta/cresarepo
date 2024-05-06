@@ -35,7 +35,7 @@ const Project = () => {
 	const editorRef = useRef(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	let type = "Submit";
+	const type = "Submit";
 
 	const form = useForm<z.infer<typeof ProjectsSchema>>({
 		resolver: zodResolver(ProjectsSchema),
@@ -285,9 +285,9 @@ const Project = () => {
 					className="primary-gradient w-fit !text-light900"
 					disabled={isSubmitting}>
 					{isSubmitting ? (
-						<>{type === "Edit" ? "Editing..." : "Posting..."}</>
+						<>{type ? "Editing..." : "Posting..."}</>
 					) : (
-						<>{type === "Edit" ? "Edit Question" : "Submit your Project"}</>
+						<>{type ? "Edit Question" : "Submit your Project"}</>
 					)}
 				</Button>
 			</form>
