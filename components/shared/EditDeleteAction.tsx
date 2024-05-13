@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import { deleteProject } from "@/lib/actions/project.actions";
 import Image from "next/image";
-// import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import React from "react";
 
 interface Props {
 	type: string;
@@ -10,8 +11,17 @@ interface Props {
 }
 
 const EditDeleteAction = ({ itemId, type }: Props) => {
-	// const pathname = usePathname();
-	// const router = useRouter();
+	const pathname = usePathname();
+	const router = useRouter();
+
+	const handleEdit = () => {
+		router.push(`/project/edit/${JSON.parse(itemId)}`);
+	};
+
+	const handleDelete = async () => {
+		await deleteProject({ projectId: JSON.parse(itemId), path: pathname });
+	};
+
 	return (
 		<div className="flex items-center justify-end gap-3 max-sm:w-full">
 			{type === "Project" && (
@@ -21,6 +31,7 @@ const EditDeleteAction = ({ itemId, type }: Props) => {
 					width={14}
 					height={14}
 					className="cursor-pointer object-contain"
+					onClick={handleEdit}
 				/>
 			)}
 
@@ -30,6 +41,7 @@ const EditDeleteAction = ({ itemId, type }: Props) => {
 				width={14}
 				height={14}
 				className="cursor-pointer object-contain"
+				onClick={handleDelete}
 			/>
 		</div>
 	);

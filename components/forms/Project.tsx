@@ -26,29 +26,73 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "../ui/input";
-// import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { ProjectsSchema } from "@/lib/validations";
 import { useTheme } from "@/context/ThemeProvider";
 import Image from "next/image";
+import { createProject, editProject } from "@/lib/actions/project.actions";
 
-const Project = () => {
+interface MongoProps {
+	type?: string;
+	mongoUserId: string;
+	projectDetails?: string;
+}
+
+const Project = ({ mongoUserId, type, projectDetails }: MongoProps) => {
 	const editorRef = useRef(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+	const router = useRouter();
+	const pathname = usePathname();
 
-	const type = "Submit";
+	const parsedProjectDetails =
+		projectDetails && JSON.parse(projectDetails || "");
+
+	const groupedTags = parsedProjectDetails?.tags?.map((tag: any) => tag.name);
 
 	const form = useForm<z.infer<typeof ProjectsSchema>>({
 		resolver: zodResolver(ProjectsSchema),
 		defaultValues: {
-			title: "",
-			explanation: "",
-			tags: [],
-			file: "",
+			title: parsedProjectDetails?.title || "",
+			explanation: parsedProjectDetails?.content || "",
+			tags: groupedTags || [],
+			category: parsedProjectDetails?.category || "",
 		},
 	});
 
 	async function onSubmit(values: z.infer<typeof ProjectsSchema>) {
-		setIsSubmitting(false);
+		setIsSubmitting(true);
+		try {
+			if (type === "Edit") {
+				await editProject({
+					projectId: parsedProjectDetails._id,
+					title: values.title,
+					content: values.explanation,
+					category: values.category,
+					path: pathname,
+				});
+				router.push(`/project/${parsedProjectDetails._id}`);
+			} else {
+				const formData = new FormData();
+				formData.append("title", values.title);
+				formData.append("content", values.explanation);
+				formData.append("tags", JSON.stringify(values.tags));
+				formData.append("category", values.category);
+				formData.append("author", JSON.stringify(JSON.parse(mongoUserId)));
+				formData.append("path", JSON.stringify(pathname));
+				if (!selectedFile) {
+					throw new Error("Select a file");
+				} else {
+					formData.append("file", selectedFile);
+				}
+				await createProject(formData);
+				router.push("/");
+			}
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsSubmitting(false);
+		}
 	}
 
 	const handleInputKeyDown = (
@@ -133,7 +177,7 @@ const Project = () => {
 										// @ts-ignore
 										(editorRef.current = editor)
 									}
-									initialValue={""}
+									initialValue={parsedProjectDetails?.content}
 									onBlur={field.onBlur}
 									onEditorChange={(content) => field.onChange(content)}
 									init={{
@@ -164,7 +208,8 @@ const Project = () => {
 								/>
 							</FormControl>
 							<FormDescription className="body-regular mt-2.5 text-light-500">
-								Introduce the problem and expand on what you put in the title
+								Paste the abstract of your work that gives an overview of your
+								work.
 							</FormDescription>
 							<FormMessage className="text-red-500" />
 						</FormItem>
@@ -177,17 +222,17 @@ const Project = () => {
 					render={({ field }) => (
 						<FormItem className="flex w-full flex-col">
 							<FormLabel className="paragraph-semibold text-dark400_light800">
-								Tags <span className="text-primary-500">*</span>
+								Keywords <span className="text-primary-500">*</span>
 							</FormLabel>
 							<FormControl className="mt-3.5">
 								<>
 									<Input
 										className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
-										placeholder="Add tags..."
+										placeholder="Add keywords..."
 										onKeyDown={(e) => {
 											handleInputKeyDown(e, field);
 										}}
-										// disabled={type === "Edit"}
+										disabled={type === "Edit"}
 									/>
 									{field.value.length > 0 && (
 										<div className="flex-start mt-2.5 gap-2.5">
@@ -195,16 +240,21 @@ const Project = () => {
 												<Badge
 													className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
 													key={tag}
-													onClick={() => handleTagRemove(tag, field)}>
+													onClick={() =>
+														type !== "Edit"
+															? handleTagRemove(tag, field)
+															: () => {}
+													}>
 													{tag}
-
-													<Image
-														src="/assets/icons/close.svg"
-														alt="Close Icon"
-														width={12}
-														height={12}
-														className="cursor-pointer object-contain invert-0 dark:invert"
-													/>
+													{type !== "Edit" && (
+														<Image
+															src="/assets/icons/close.svg"
+															alt="Close Icon"
+															width={12}
+															height={12}
+															className="cursor-pointer object-contain invert-0 dark:invert"
+														/>
+													)}
 												</Badge>
 											))}
 										</div>
@@ -212,7 +262,8 @@ const Project = () => {
 								</>
 							</FormControl>
 							<FormDescription className="body-regular mt-2.5 text-light-500">
-								Add up to three tags to describe what your problem is all about
+								Add up to three keywords to describe what your problem is all
+								about
 							</FormDescription>
 							<FormMessage className="text-red-500" />
 						</FormItem>
@@ -229,12 +280,10 @@ const Project = () => {
 								<span className="text-primary-500">*</span>
 							</FormLabel>
 							<FormControl className="mt-3.5">
-								<Select>
+								<Select value={field.value} onValueChange={field.onChange}>
 									<SelectTrigger
 										className={`body-regular light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5`}>
-										<div className="line-clamp-1 flex-1 text-left">
-											<SelectValue {...field} />
-										</div>
+										<SelectValue />
 									</SelectTrigger>
 									<SelectContent className="background-light800_dark300 text-dark500_light700">
 										<SelectGroup>
@@ -268,7 +317,8 @@ const Project = () => {
 								<Input
 									type="file"
 									className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px]"
-									{...field}
+									onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+									disabled={type === "Edit"}
 								/>
 							</FormControl>
 							<FormDescription className="body-regular mt-2.5 text-light-500">
@@ -285,9 +335,9 @@ const Project = () => {
 					className="primary-gradient w-fit !text-light900"
 					disabled={isSubmitting}>
 					{isSubmitting ? (
-						<>{type ? "Editing..." : "Posting..."}</>
+						<>{type ? "Editing..." : "Submitting..."}</>
 					) : (
-						<>{type ? "Edit Question" : "Submit your Project"}</>
+						<>{type ? "Edit Project Details" : "Submit your Project"}</>
 					)}
 				</Button>
 			</form>

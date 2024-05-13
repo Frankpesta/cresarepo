@@ -15,7 +15,7 @@ export const sidebarLinks: SidebarLink[] = [
 	{
 		imgUrl: "/assets/icons/users.svg",
 		route: "/community",
-		label: "Community",
+		label: "All Users",
 	},
 	{
 		imgUrl: "/assets/icons/star.svg",
@@ -25,7 +25,7 @@ export const sidebarLinks: SidebarLink[] = [
 	{
 		imgUrl: "/assets/icons/tag.svg",
 		route: "/tags",
-		label: "Tags",
+		label: "Keywords",
 	},
 	{
 		imgUrl: "/assets/icons/user.svg",
