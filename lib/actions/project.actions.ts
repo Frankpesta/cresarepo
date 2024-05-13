@@ -215,10 +215,10 @@ export async function editProject(params: EditProjectParams) {
 			throw new Error("Project not found");
 		}
 
-		(project.title = title),
-			(project.content = content),
-			(project.category = category),
-			await project.save();
+		project.title = title;
+		project.content = content;
+		project.category = category;
+		await project.save();
 
 		revalidatePath(path);
 	} catch (error) {

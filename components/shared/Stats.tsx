@@ -1,16 +1,15 @@
 import { formatAndDivideNumber } from "@/lib/utils";
-import Image from "next/image";
 import React from "react";
 
 interface StatsProps {
 	totalProjects: number;
 }
 
-interface Props {
-	imgUrl: string;
-	value: number;
-	title: string;
-}
+// interface Props {
+// 	imgUrl: string;
+// 	value: number;
+// 	title: string;
+// }
 
 // const StatsCard = ({ imgUrl, value, title }: Props) => {
 // 	return (

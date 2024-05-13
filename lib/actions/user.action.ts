@@ -177,7 +177,7 @@ export async function getSavedProjects(params: GetSavedProjectsParams) {
 	try {
 		connectToDatabase();
 
-		const { clerkId, page = 1, pageSize = 10, filter, searchQuery } = params;
+		const { clerkId, filter, searchQuery } = params;
 
 		const query: FilterQuery<typeof Project> = searchQuery
 			? { title: { $regex: new RegExp(searchQuery, "i") } }
@@ -255,7 +255,7 @@ export async function getUserProjects(params: GetUserStatsParams) {
 	try {
 		connectToDatabase();
 
-		const { userId, page = 1, pageSize = 10 } = params;
+		const { userId } = params;
 
 		const totalProjects = await Project.countDocuments({ author: userId });
 
