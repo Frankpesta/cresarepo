@@ -30,7 +30,7 @@ export async function getAllTags(params: GetAllTagsParams) {
 	try {
 		connectToDatabase();
 
-		const { page, pageSize, searchQuery, filter } = params;
+		const { searchQuery, filter } = params;
 
 		const query: FilterQuery<typeof Tag> = {};
 
