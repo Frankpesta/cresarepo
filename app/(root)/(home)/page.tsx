@@ -7,59 +7,14 @@ import Filter from "@/components/shared/Filter";
 import HomeFilters from "@/components/Home/HomeFilters";
 import NoResult from "@/components/shared/NoResult";
 import ProjectCard from "@/components/cards/ProjectCard";
+import { getProjects } from "@/lib/actions/project.actions";
+import { SearchParamsProps } from "@/types";
 
-const projects = [
-	{
-		_id: "1",
-		title:
-			"Development of a Web Based Project Repository for the Department of Computer and Robotics Education, University of Nigeria Nsukka",
-		tags: [
-			{
-				_id: "1",
-				name: "Development",
-			},
-			{
-				_id: "2",
-				name: "Web-based",
-			},
-		],
-		author: {
-			_id: "1",
-			name: "Enunwa Franklin",
-			picture: "https://source.unsplash.com/random",
-			clerkId: "asdfghjkl",
-		},
-		upvotes: ["Hello", "Hi", "Holla"],
-		views: 10,
-		createdAt: new Date(),
-	},
-	{
-		_id: "2",
-		title:
-			"Development of a Web Based Project Repository for the Department of Computer and Robotics Education, University of Nigeria Nsukka",
-		tags: [
-			{
-				_id: "1",
-				name: "Development",
-			},
-			{
-				_id: "2",
-				name: "Web-based",
-			},
-		],
-		author: {
-			_id: "1",
-			name: "Enunwa Franklin",
-			picture: "https://source.unsplash.com/random",
-			clerkId: "asdfghjkl",
-		},
-		upvotes: ["Hello", "Hi", "Holla"],
-		views: 10,
-		createdAt: new Date(),
-	},
-];
-
-const Home = () => {
+const Home = async ({ searchParams }: SearchParamsProps) => {
+	const results = await getProjects({
+		searchQuery: searchParams.q,
+		filter: searchParams.filter,
+	});
 	return (
 		<>
 			<div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -88,14 +43,15 @@ const Home = () => {
 			<HomeFilters />
 
 			<div className="mt-10 flex w-full flex-col gap-6">
-				{projects.length > 0 ? (
-					projects.map((project) => (
+				{results.projects.length > 0 ? (
+					results.projects.map((project) => (
 						<ProjectCard
 							key={project._id}
 							_id={project._id}
 							title={project.title}
 							tags={project.tags}
 							author={project.author}
+							category={project.category}
 							upvotes={project.upvotes}
 							views={project.views}
 							createdAt={project.createdAt}
@@ -106,7 +62,7 @@ const Home = () => {
 						title="There is no Project work to show"
 						desc="Be the first to make the move. Submit a project to kickstart the journey!"
 						btn="Submit a Project"
-						link="/submit a project"
+						link="/submit-project"
 					/>
 				)}
 			</div>

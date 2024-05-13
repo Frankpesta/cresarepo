@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getTimestamp = (createdAt: Date): string => {
 	const now = new Date();
-	const timeDifference = now.getTime() - createdAt.getTime();
+	const timeDifference = now.getTime() - createdAt?.getTime();
 
 	// Define time intervals in milliseconds
 	const minute = 60 * 1000;
@@ -47,21 +47,25 @@ export const formatAndDivideNumber = (num: number): string => {
 		const formattedNum = (num / 1000).toFixed(1);
 		return `${formattedNum}K`;
 	} else {
-		return num.toString();
+		return num?.toString();
 	}
 };
 
 export const getJoinedDate = (date: Date): string => {
-	// Get the month (0-11) and add 1 to it to get the actual month (1-12)
-	const month: number = date.getMonth() + 1;
-
-	// Get the full year (4 digits)
-	const year: number = date.getFullYear();
-
-	// Join the month and year with a separator
-	const joined: string = `${month}/${year}`;
-
-	return joined;
+	// Check if date is an instance of Date
+	if (date instanceof Date) {
+		// Get the month (0-11) and add 1 to it to get the actual month (1-12)
+		const month: number = date.getMonth() + 1;
+		// Get the full year (4 digits)
+		const year: number = date.getFullYear();
+		// Join the month and year with a separator
+		const joined: string = `${month}/${year}`;
+		return joined;
+	} else {
+		// Handle the case when date is not a Date object
+		console.error("Invalid date object");
+		return "";
+	}
 };
 
 interface UrlQueryParams {
