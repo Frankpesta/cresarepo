@@ -30,7 +30,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
 					route="/"
 					iconPosition="left"
 					imgSrc="/assets/icons/search.svg"
-					placeholder="Search for questions"
+					placeholder="Search for projects"
 					otherClasses="flex-1"
 				/>
 				<Filter
