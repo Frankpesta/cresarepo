@@ -40,6 +40,7 @@ export async function getProjects(params: GetProjectsParams) {
 				sortOptions = { views: -1 };
 				break;
 			default:
+				sortOptions = { createdAt: -1 };
 				break;
 		}
 
@@ -143,11 +144,7 @@ export async function upvoteProject(params: ProjectVoteparams) {
 				$push: { upvotes: userId },
 			};
 		} else {
-			updateQuery = {
-				$addToset: {
-					upvotes: userId,
-				},
-			};
+			updateQuery = { $addToSet: { upvotes: userId } };
 		}
 
 		const project = await Project.findByIdAndUpdate(projectId, updateQuery, {
@@ -181,11 +178,7 @@ export async function downvoteProject(params: ProjectVoteparams) {
 				$push: { downvotes: userId },
 			};
 		} else {
-			updateQuery = {
-				$addToset: {
-					downvotes: userId,
-				},
-			};
+			updateQuery = { $addToSet: { downvotes: userId } };
 		}
 
 		const project = await Project.findByIdAndUpdate(projectId, updateQuery, {
